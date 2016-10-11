@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        body,div {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, Verdana, 宋体;
+        }
+        a {
+            text-decoration: none;
+        }
+        #banner {
+            position: relative;
+            width: 730px;
+            height: 454px;
+            overflow: hidden;
+            margin: 100px auto;
+        }
+        .pre,.next {
+            width: 28px;
+            height: 62px;
+            color: #FFF;
+            background: rgba(0,0,0,0.2);
+            text-align: center;
+            line-height: 62px;
+            position: absolute;
+            top: 50%;
+            margin-top: -31px;
+            z-index: 998;
+            display: none;
+        }
+        .pre {
+            left: 0;
+        }
+        .next {
+            right: 0;
+        }
+        #pics {
+            position: relative;
+        }
+        #pics a {
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 0;
+            opacity: 0;
+        }
+        #nav {
+            width: 180px;
+            height: 20px;
+            position: absolute;
+            bottom: 10px;
+            left: 50%;
+            margin-left: -90px;
+            z-index: 999;
+            /*background: #CCC;*/
+        }
+        .round {
+            width: 20px;
+            height: 20px;
+            border-radius: 10px;
+            color: #FFF;
+            cursor: pointer;
+            margin-right: 8px;
+            background-color: #3e3e3e;
+            float: left;
+            text-align: center;
+            line-height: 20px;
+            font-size: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div id="banner">
+        <a href="javascript:void(0)" class="pre">&lt;</a>
+        <a href="javascript:void(0)" class="next">&gt;</a>
+        <div id="pics">
+            <a href="#" class="pic" style="z-index: 1;opacity: 1">
+                <img src="images/0.jpg" alt="">
+            </a>
+            <a href="#" class="pic">
+                <img src="images/1.jpg" alt="">
+            </a>
+            <a href="#" class="pic">
+                <img src="images/2.jpg" alt="">
+            </a>
+            <a href="#" class="pic">
+                <img src="images/3.jpg" alt="">
+            </a>
+            <a href="#" class="pic">
+                <img src="images/4.jpg" alt="">
+            </a>
+            <a href="#" class="pic">
+                <img src="images/5.jpg" alt="">
+            </a>
+        </div>
+        <div id="nav">
+            <div class="round" style="background: #F00;" name="0">1</div>
+            <div class="round" name="1">2</div>
+            <div class="round" name="2">3</div>
+            <div class="round" name="3">4</div>
+            <div class="round" name="4">5</div>
+            <div class="round" name="5">6</div>
+        </div>
+    </div>
+    <script src="moveStart.js"></script>
+    <script>
+    var banner=document.getElementById('banner');
+    var prev=banner.children[0];
+    var next=banner.children[1];
+    var pics=document.getElementById('pics');
+    var as=pics.children;
+    var nav=document.getElementById('nav');
+    var rounds=nav.children;
+    var curIndex=0;  //定时器第二张图片开始
+    //切换图片 自动轮播
+    var timer=null;
+    //自动轮播
+    function autoPlay(){
+        curIndex++;
+        if(curIndex>as.length-1){
+            curIndex=0;
+        }
+        showA();
+    }
+    //显示元素
+    function showA(){
+        for(var i=0;i<as.length;i++){
+            as[i].style.zIndex=0;
+            startMove(as[i],{'opacity':0});
+            rounds[i].style.background="#3e3e3e";
+        }
+        as[curIndex].style.zIndex=1;
+        startMove(as[curIndex],{'opacity':100});
+        rounds[curIndex].style.background="#f00";
+    }
+    timer=setInterval(autoPlay,1000)
+    //左右箭头出现
+    banner.onmouseover=function(){
+        prev.style.display="block";
+        next.style.display="block";
+        clearInterval(timer)
+    }
+    //左右箭头消失
+    banner.onmouseout=function(){
+        prev.style.display="none";
+        next.style.display="none";
+        timer=setInterval(autoPlay,1000);
+    }
+    //右箭头的单击事件
+    next.onclick=function(){
+        curIndex++;
+        if(curIndex>as.length-1){
+            curIndex=0;
+        }
+        showA();
+    }
+    //左箭头的单击事件
+    prev.onclick=function(){
+        curIndex--;
+        if(curIndex<0){
+            curIndex=as.length-1;
+        }
+        showA();
+    }
+    //小圆点的操作  移入和移出事件
+    for(var j=0;j<rounds.length;j++){
+        rounds[j].onmouseover=function(){
+            curIndex=parseInt(this.getAttribute("name"));
+            console.log(curIndex)
+            showA();
+        }
+        rounds[j].onmouseout=function(){
+        }
+    }
+
+    </script>
+</body>
+</html>
